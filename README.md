@@ -31,7 +31,7 @@
 
 ***Reverse IP Via YouGet Signal's Api***
 
-	python rev.py -s hackthissite.org
+	python reverse_ip.py -s hackthissite.org
 	
 
 
