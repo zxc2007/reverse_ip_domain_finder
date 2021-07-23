@@ -1,0 +1,126 @@
+"""
+    !!!      !!!           @@@@@@          ========!!!!========  11111111111111   ###############   $$$$$$$$$$$$$$$   @@@       @@@
+    !!!      !!!          @@    @@         ========!!!!========  11111111111111   ###############   $$$$$$$$$$$$$$$   @@@       @@@
+    !!!   !!!            @@      @@        ========!!!!========  111                   ####         $$$$              @@@       @@@
+    !!!  !!!!           @@        @@               !!!!          111                   ####         $$$$              @@@       @@@  
+    !!!!!              @@ ======== @@              !!!!          11111111111111        ####         $$$$$$$$$$$$$$$   @@@@@@@@@@@@@
+    !!!!!             @@============@@             !!!!          11111111111111        ####         $$$$$$$$$$$$$$$   @@@@@@@@@@@@@
+    !!!  !!!!        @@==============@@            !!!!          111                   ####                    $$$$   @@@       @@@
+    !!!  !!!!       @@                @@           !!!!          111                   ####                    $$$$   @@@       @@@
+    !!!      !!!   @@                  @@          !!!!          111              ###############   $$$$$$$$$$$$$$$   @@@       @@@
+    !!!      !!!  @@                    @@         !!!!          111              ###############   $$$$$$$$$$$$$$$   @@@       @@@
+
+                                ~ Real auther of this programm is An0n #xploiTeR :)
+                                             ~ Modified by Katfish :)
+"""
+
+
+from insides import *
+from sys import argv
+import requests, json
+import optparse
+import os, re
+
+################################  Banner   ################################
+
+print(Banner)
+
+################################ Functions ################################
+
+
+
+def reverseViaYGS(website):
+    website = addHTTP(website); webs = removeHTTP(website)
+    url = "https://domains.yougetsignal.com/domains.php"
+    post = {
+        'remoteAddress' : webs,
+        'key' : ''
+    }
+    request = requests.post(url, headers=functions._headers, timeout=5, data=post).text.encode('UTF-8')
+
+    grab = json.loads(request)
+
+    Status = grab['status']
+    IP = grab['remoteIpAddress']
+    Domain = grab['remoteAddress']
+    Total_Domains = grab['domainCount']
+    Array = grab['domainArray']
+
+    if (Status == 'Fail'):
+        write(var="#", color=r, data="Sorry! Reverse Ip Limit Reached.")
+    else:
+        write(var="$", color=c, data="IP: " + IP + "")
+        write(var="$", color=c, data="Domain: " + Domain + "")
+        write(var="$", color=c, data="Total Domains: " + Total_Domains + "\n")
+
+        domains = []
+
+        for x, y in Array:
+            domains.append(x)
+
+        for res in domains:
+            write(var="#", color=b, data=res)
+
+def heading(heading, website, color, afterWebHead):
+    space = " " * 15
+    var = str(space + heading + " '" + website + "'" + str(afterWebHead) + " ..." + space)
+    length = len(var) + 1; print("") # \n
+    print(str("{white}" + "-" * length + "-").format(white=w))
+    print(str("{color}" + var).format(color=color))
+    print(str("{white}" + "-" * length + "-").format(white=w)); print("") # \n
+
+################################  Args  ################################ 
+
+_usage      = g + "python " + w + argv[0] + g + " --all hackthissite.org" + w
+_version    = w + "[" + c + "~" + w + "] " + g + "Version: " + c + "2.0"
+parser      = optparse.OptionParser(usage=_usage, version=_version, conflict_handler="resolve")
+general     = optparse.OptionGroup(parser, y + 'Basic Help')
+general.add_option( '-h', '--help', action='help', dest='help', help='Shows the help for program.')
+general.add_option( '-v', '--version', action='version',
+    help='Shows the version of program.')
+
+reverse_ip  = optparse.OptionGroup(parser, g + "Reverse IP")
+reverse_ip.add_option( "-s", "--revygs",  action='store_true', dest='yougetsignal', help="For Doing Reverse IP Via You Get Signal's API")
+
+grouped_scanning = optparse.OptionGroup(parser, c + "Grouped Results")
+grouped_scanning.add_option( "-a", "--all",  action='store_true', dest='all', help="All Things at Once!")
+
+
+
+parser.add_option_group(general)
+parser.add_option_group(reverse_ip)
+parser.add_option_group(grouped_scanning)
+
+(options, args) = parser.parse_args()
+try: website = addHTTP(args[0])
+except: pass
+
+try:
+    if  options.yougetsignal:
+        heading(heading="Doing Reverse IP", website=website, afterWebHead=" Via YGS <3", color=g)
+        reverseViaYGS(website)
+
+    elif options.hackertarget:
+        heading(heading="Doing Reverse IP", website=website, afterWebHead=" Via HT <3", color=c)
+        reverseViaHT(website)
+
+    elif options.all:
+        heading(heading="Doing Reverse IP", website=website, afterWebHead=" Via YGS <3", color=g)
+        reverseViaYGS(website)
+
+        heading(heading="Doing Reverse IP", website=website, afterWebHead=" Via HT <3", color=c)
+        reverseViaHT(website)
+
+    else:
+        write(var="~", color=c, data="Usage: " + g + "python " + w + argv[0] + g + " --all hackthissite.org")
+
+except KeyboardInterrupt:
+    write(var="~", color=y, data="Err0r: User Interrupted!")
+
+except Exception as e:
+    write(var="#", color=r, data="Err0r: Kindly Report the err0r below to Katfish :) (If Your Internet's Working ;)\n\"\"\"\n" + str(e) + "\n\"\"\"")
+
+print(Footer)
+
+# ~ See Ya :)
+# ~ Modified by Katfish :)
